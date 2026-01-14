@@ -35,7 +35,7 @@ export const useauthstore=create((set,get)=>({
 
 signUp: async (data) => {
   set({ isSigningup: true });
-
+  
   try {
     // 1️⃣ Generate keypair for THIS user
     const { publicKey, privateKey } = await generateKeyPair();
@@ -53,6 +53,11 @@ signUp: async (data) => {
 
     // 4️⃣ 🔐 Store PRIVATE KEY locally (user-scoped)
     localStorage.setItem(`privateKey-${user._id}`, privateKey);
+    const key = localStorage.getItem(`privateKey-${user._id}`);
+if (!key) {
+  throw new Error("Encryption key missing after signup");
+}
+
 
     // 5️⃣ Connect socket AFTER keys exist
     get().connectSocket();
@@ -83,8 +88,10 @@ logIn: async (data) => {
     // 2️⃣ Set auth user FIRST
     set({ authUser: user });
 
-    // 3️⃣ 🔐 Ensure E2EE keys exist FOR THIS USER
-
+const key = localStorage.getItem(`privateKey-${user._id}`);
+if (!key) {
+  throw new Error("Encryption key missing. Please re-register.");
+}
     // 4️⃣ Connect socket AFTER auth + keys
     get().connectSocket();
 

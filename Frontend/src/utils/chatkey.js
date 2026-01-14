@@ -61,7 +61,13 @@ export async function getSharedAESKey(myId, otherUserId) {
   }
 
   // 6️⃣ Decrypt AES key locally
-  const privateKey = await getPrivateKey(myId);
+let privateKey;
+try {
+  privateKey = await getPrivateKey(myId);
+} catch (err) {
+  console.error("E2EE error:", err);
+  throw new Error("Missing encryption keys. Cannot decrypt chat.");
+}
 
   const rawKey = await crypto.subtle.decrypt(
     { name: "RSA-OAEP" },
