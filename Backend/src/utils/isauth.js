@@ -11,8 +11,15 @@ export const Isauth=async(req,res,next)=>{
     const decodeddata=jwt.verify(token,process.env.JWT_SEC)
 
    if(!decodeddata)return res.status(400).json({message:"Please login"})
+      
    
-    req.user=await User.findById(decodeddata.id)
+    const user = await User.findById(decoded.id).select("-password");
+
+    if (!user) {
+      return res.status(401).json({ message: "User not found" });
+    }
+        req.user = user;
+
     next()
   } catch (error) {
     console.log(error)

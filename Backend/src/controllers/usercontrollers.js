@@ -66,7 +66,7 @@ export const login=async(req,res)=>{
     let user=await User.findOne({email})
     if(!user)return res.status(404).json({message:"No user with this email"})
 
-    const pass=bcrypt.compare(password,user.password)
+    const pass=await bcrypt.compare(password,user.password)
 
     if(!pass)return res.status(400).json({message:"Wrong password"})
    
@@ -98,7 +98,11 @@ export const logout=(req,res)=>{
 export const profilepic=async(req,res)=>{
     try {
         const {profilepic}=req.body
+         if (!req.user) {
+  return res.status(401).json({ message: "Unauthorized" });
+}
         const user= req.user._id
+       
 
         if(!profilepic)return res.status(401).json({message:"Provide pic !"})
 
@@ -113,8 +117,11 @@ export const profilepic=async(req,res)=>{
 
 export const checkauth=async(req,res)=>{
     try {
-        const user=await User.findById(req.user)
-        res.json(user)
+         if (!req.user) {
+  return res.status(401).json({ message: "Unauthorized" });
+}      
+
+        res.json(req.user)
     } catch (error) {
         console.log(error)
     }
@@ -124,7 +131,11 @@ export const checkauth=async(req,res)=>{
 export const getuserprofile=async(req,res)=>{
     try {
         const {id}=req.params
+         if (!req.user) {
+  return res.status(401).json({ message: "Unauthorized" });
+}
         const userprofileid=await User.findById(id)
+
 
         res.json({
             name:userprofileid.fullName,
@@ -161,7 +172,12 @@ export const getfriend=async(req,res)=>{
 
 export const allfriends=async(req,res)=>{
     try {
+         if (!req.user) {
+  return res.status(401).json({ message: "Unauthorized" });
+}
         const userid=req.user._id
+     
+
         const user =await User.findById(userid).populate("friends","fullName profilePic createdAt publicKey")
         res.json(user.friends)
     } catch (error) {
@@ -172,7 +188,11 @@ export const allfriends=async(req,res)=>{
 
 export const addfriend = async (req, res) => {
   try {
+     if (!req.user) {
+  return res.status(401).json({ message: "Unauthorized" });
+}
     const userId = req.user._id;
+
     const user = await User.findById(userId);
     const friendId = req.params.id;
     const frnd=await User.findById(friendId)
@@ -237,9 +257,11 @@ export const addfriend = async (req, res) => {
 };
 
 export const getPublicKey = async (req, res) => {
-  console.log("📡 Public key requested for:", req.params.id);
 
   const user = await User.findById(req.params.id).select("publicKey");
+  if (!user || !user.publicKey) {
+    return res.status(404).json({ message: "Public key not found" });
+  }
 
   console.log("🔑 Found publicKey:", !!user?.publicKey);
 
@@ -250,7 +272,11 @@ export const getPublicKey = async (req, res) => {
 
 export const sendrequest=async(req,res)=>{
     try {
+       if (!req.user) {
+  return res.status(401).json({ message: "Unauthorized" });
+}
     const userId = req.user._id;
+  
     const user = await User.findById(userId);
     const friendId = req.params.id;
 
@@ -288,7 +314,11 @@ export const sendrequest=async(req,res)=>{
 
 export const friendRequests=async(req,res)=>{
     try {
+       if (!req.user) {
+  return res.status(401).json({ message: "Unauthorized" });
+}
         const userId=req.user._id
+
         const user=await User.findById(userId)
 
 
@@ -309,7 +339,11 @@ export const friendRequests=async(req,res)=>{
 
 export const removeRequests =async(req,res)=>{
     try {
+       if (!req.user) {
+  return res.status(401).json({ message: "Unauthorized" });
+}
         const userid=req.user._id
+
         const user=await User.findById(userid)
 
         user.friendRequests=[]
