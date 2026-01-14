@@ -13,7 +13,7 @@ export const Isauth=async(req,res,next)=>{
    if(!decodeddata)return res.status(400).json({message:"Please login"})
       
    
-    const user = await User.findById(decoded.id).select("-password");
+    const user = await User.findById(decodeddata.id).select("-password");
 
     if (!user) {
       return res.status(401).json({ message: "User not found" });
