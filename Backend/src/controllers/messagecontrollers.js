@@ -15,33 +15,32 @@ export const getusersforsidebar=async(req,res)=>{
     }
 }
 
-export const getmessages=async(req,res)=>{
-    try {
-       const {id:usertochatid}=req.params
-       const myid=req.user._id
+export const getmessages = async (req, res) => {
+  try {
+    const { chatId } = req.params;
 
-       const messages= await Message.find({
-        $or:[
-            {
-              senderId:myid , receiverId:usertochatid
-            },
-            {
-                senderId:usertochatid,receiverId:myid
-            }
-        ]
-       })
+    const [a, b] = chatId.split("_");
+    const normalizedChatId = [a, b].sort().join("_");
 
-       res.json(messages)
-    } catch (error) {
-        console.log(error)
-    }
-}
+    const messages = await Message.find({ chatId: normalizedChatId })
+      .sort({ createdAt: 1 });
+
+    res.json(messages);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Failed to load messages" });
+  }
+};
+
 
 export const sendmessages = async (req, res) => {
   try {
-    const senderId = req.user._id;
-    const receiverId = req.params.id;
+    const {chatId}=req.params
+const myId = req.user._id.toString();
+const [a, b] = chatId.split("_");
 
+const senderId = myId;
+const receiverId = myId === a ? b : a;
     let imageUrl = null;
 
     if (req.body.image) {
@@ -52,6 +51,7 @@ export const sendmessages = async (req, res) => {
     }
 
     const message = await Message.create({
+      chatId,
       senderId,
       receiverId,
       cipherText: req.body.cipherText || null,

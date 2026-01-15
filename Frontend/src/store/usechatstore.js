@@ -29,9 +29,9 @@ selecteduser: JSON.parse(localStorage.getItem("selectedUser")) || null,
     set({ isMessagesloading: true });
 
     try {
-      const res = await axiosinstance.get(`/chat/${id}`);
       const myId = useauthstore.getState().authUser._id;
-
+      const chatId = [myId, id].sort().join("_");
+      const res = await axiosinstance.get(`/chat/${chatId}`);
       const aesKey = await getSharedAESKey(myId, id);
 
       const decrypted = await Promise.all(
@@ -43,11 +43,8 @@ selecteduser: JSON.parse(localStorage.getItem("selectedUser")) || null,
         })
       );
 
-set({
-  messages: decrypted.filter(
-    (msg) => msg && msg.senderId
-  ),
-});
+set({ messages: decrypted });
+
     } finally {
       set({ isMessagesloading: false });
     }
@@ -58,6 +55,7 @@ set({
 
     const { selecteduser, messages } = get();
     const myId = useauthstore.getState().authUser._id;
+    const chatId = [myId, selecteduser._id].sort().join("_");
 
     const aesKey = await getSharedAESKey(myId, selecteduser._id);
 
@@ -72,7 +70,7 @@ set({
     };
 
     const saved = await axiosinstance.post(
-      `/chat/send/${selecteduser._id}`,
+      `/chat/send/${chatId}`,
       payload
     );
 

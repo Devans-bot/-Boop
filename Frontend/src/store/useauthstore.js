@@ -23,8 +23,11 @@ export const useauthstore=create((set,get)=>({
    checkAuth:async()=>{
     try {
         const res=await axiosinstance.get("/user/checkauth")
-        set({authUser:res.data})
-        get().connectSocket()
+      
+        if (res.data?._id) {
+        set({ authUser: res.data });
+        get().connectSocket();
+       }
     } catch (error) {
         console.log(error)
         set({authUser:null})
@@ -204,7 +207,9 @@ logOut: async () => {
     },
 
    connectSocket:()=>{
+
     const {authUser}=get()
+    if (!authUser?._id) return;
     if(!authUser || get().socket?.connected) return;
 
     const socket=io(BASE_URL,{
