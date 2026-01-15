@@ -31,10 +31,14 @@ const Chatcontainer = () => {
 
 
 useEffect(() => {
-  if (selecteduser?._id) {
-    getmessages(selecteduser._id);
-  }
+  if (!selecteduser?._id) return;
+
+  // 🔥 CLEAR OLD CHAT IMMEDIATELY
+  useChatStore.setState({ messages: [] });
+
+  getmessages(selecteduser._id);
 }, [selecteduser?._id]);
+
 
 
 useEffect(() => {
@@ -44,11 +48,10 @@ useEffect(() => {
     if (!msg || !msg.senderId) return;
 
     // ✅ FILTER: message must belong to current chat
-    const isCurrentChat =
-      msg.senderId === selecteduser._id ||
-      msg.receiverId === selecteduser._id;
-
-    if (!isCurrentChat) return; // 🔥 THIS WAS MISSING
+   const currentChatId = [authUser._id, selecteduser._id]
+    .sort()
+    .join("_");
+  if (msg.chatId !== currentChatId) return; // ✅ strict filter
 
     let finalMessage = msg;
 
@@ -57,8 +60,11 @@ useEffect(() => {
       try {
         const { getSharedAESKey } = await import("../utils/chatkey");
         const { decryptWithAES } = await import("../utils/crypto");
+        
+        const otherUserId =
+        msg.senderId === authUser._id ? msg.receiverId : msg.senderId;
 
-        const aesKey = await getSharedAESKey(authUser._id, msg.senderId);
+        const aesKey = await getSharedAESKey(authUser._id, otherUserId);
         const text = await decryptWithAES(msg, aesKey);
 
         finalMessage = { ...msg, text };
