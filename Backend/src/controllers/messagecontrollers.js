@@ -36,11 +36,12 @@ export const getmessages = async (req, res) => {
 export const sendmessages = async (req, res) => {
   try {
     const {chatId}=req.params
-const myId = req.user._id.toString();
-const [a, b] = chatId.split("_");
+    const myId = req.user._id.toString();
+    const [a, b] = chatId.split("_");
+     const normalizedChatId = [a, b].sort().join("_"); // ✅ ADD THIS
 
-const senderId = myId;
-const receiverId = myId === a ? b : a;
+    const senderId = myId;
+    const receiverId = myId === a ? b : a;
     let imageUrl = null;
 
     if (req.body.image) {
@@ -51,7 +52,7 @@ const receiverId = myId === a ? b : a;
     }
 
     const message = await Message.create({
-      chatId,
+      chatId:normalizedChatId,
       senderId,
       receiverId,
       cipherText: req.body.cipherText || null,
