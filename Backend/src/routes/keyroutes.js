@@ -33,14 +33,13 @@ router.get("/key/:chatId", async (req, res) => {
       return res.status(400).json({ message: "Public key missing" });
     }
 
-   return res.json({
-  exists: true,
-  encryptedKeys: {
-    [existing.userA.toString()]: existing.encryptedKeyForA,
-    [existing.userB.toString()]: existing.encryptedKeyForB,
-  },
-});
-
+    return res.json({
+      exists: false,
+      userA,
+      userB,
+      publicKeyA: userAData.publicKey,
+      publicKeyB: userBData.publicKey,
+    });
   } catch (err) {
     console.error(err);
     res.status(500).json({ message: "Failed to fetch chat key" });
