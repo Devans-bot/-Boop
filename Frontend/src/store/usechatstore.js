@@ -9,6 +9,7 @@ import toast from "react-hot-toast";
 export const useChatStore=create((set,get)=>({
     messages:[],
     users:[],
+    activeChatId:null,
 selecteduser: JSON.parse(localStorage.getItem("selectedUser")) || null,
     isUsersloading:false,
     isMessagesloading:false,
@@ -26,11 +27,15 @@ selecteduser: JSON.parse(localStorage.getItem("selectedUser")) || null,
         }
     },
   getmessages: async (id) => {
+     const myId = useauthstore.getState().authUser._id;
+     const chatId = [myId, id].sort().join("_");
+     if (get().activeChatId !== chatId) {
+    set({ messages: [], activeChatId: chatId });
+  }
     set({ isMessagesloading: true });
 
     try {
-      const myId = useauthstore.getState().authUser._id;
-      const chatId = [myId, id].sort().join("_");
+     
       const res = await axiosinstance.get(`/chat/${chatId}`);
       const aesKey = await getSharedAESKey(myId, id);
 
@@ -43,8 +48,9 @@ selecteduser: JSON.parse(localStorage.getItem("selectedUser")) || null,
         })
       );
 
-set({ messages: decrypted });
-
+ if (get().activeChatId === chatId) {
+      set({ messages: decrypted });
+    }
     } finally {
       set({ isMessagesloading: false });
     }

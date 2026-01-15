@@ -4,6 +4,7 @@ import Chatbar from './chatbar'
 import Inputbox from './input'
 import { useChatStore } from '../store/usechatstore'
 import { useauthstore } from '../store/useauthstore'
+import { getSharedAESKey } from '../utils/chatkey'
 
 
 const Chatcontainer = () => {
@@ -13,6 +14,20 @@ const Chatcontainer = () => {
   const [previewImage, setPreviewImage] = useState(null)
 
   
+  useEffect(() => {
+  if (!selecteduser || !authUser) return;
+
+  const warmUpKey = async () => {
+    try {
+      await getSharedAESKey(authUser._id, selecteduser._id);
+    } catch {
+      // ignore, first message will retry
+    }
+  };
+
+  warmUpKey();
+}, [selecteduser?._id]);
+
   const scrollToBottom = () => {
     const el = messagesContainerRef.current
     if (!el) return
