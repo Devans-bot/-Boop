@@ -38,10 +38,14 @@ export const sendmessages = async (req, res) => {
     const {chatId}=req.params
     const myId = req.user._id.toString();
     const [a, b] = chatId.split("_");
-     const normalizedChatId = [a, b].sort().join("_"); // ✅ ADD THIS
 
-    const senderId = myId;
+    if (myId !== a && myId !== b) {
+  return res.status(403).json({ message: "Invalid chat access" });
+}
+
+    const normalizedChatId = [a, b].sort().join("_");
     const receiverId = myId === a ? b : a;
+    const senderId = myId;
     let imageUrl = null;
 
     if (req.body.image) {
@@ -56,7 +60,6 @@ export const sendmessages = async (req, res) => {
       senderId,
       receiverId,
       cipherText: req.body.cipherText || null,
-      encryptedKey: req.body.encryptedKey || null,
       iv: req.body.iv || null,
       image: imageUrl,
     });
