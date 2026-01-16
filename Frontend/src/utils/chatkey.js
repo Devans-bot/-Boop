@@ -69,11 +69,18 @@ try {
   throw new Error("Missing encryption keys. Cannot decrypt chat.");
 }
 
-  const rawKey = await crypto.subtle.decrypt(
+let rawKey;
+try {
+  rawKey = await crypto.subtle.decrypt(
     { name: "RSA-OAEP" },
     privateKey,
     Uint8Array.from(atob(encryptedKeyBase64), c => c.charCodeAt(0))
   );
+} catch (err) {
+  await axiosinstance.delete(`/chat/key/${chatId}`);
+  throw new Error("Corrupted chat key. Regenerating.");
+}
+
 
   return crypto.subtle.importKey(
     "raw",

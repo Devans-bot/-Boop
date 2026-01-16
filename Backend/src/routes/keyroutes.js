@@ -13,20 +13,32 @@ router.get("/key/:chatId", async (req, res) => {
 
     const existing = await ChatKey.findOne({ chatId });
 
-    if (!existing) {
-      // 🚫 DO NOT leak public keys
+    if (existing) {
       return res.json({
-        exists: false,
-        ready: false,
+        exists: true,
+        userA: existing.userA.toString(),
+        userB: existing.userB.toString(),
+        encryptedKeyForA: existing.encryptedKeyForA,
+        encryptedKeyForB: existing.encryptedKeyForB,
       });
     }
 
+    // chat key does NOT exist → frontend will generate
+    const [userA, userB] = chatId.split("_");
+
+    const userAData = await User.findById(userA).select("publicKey");
+    const userBData = await User.findById(userB).select("publicKey");
+     
+    if (!userAData?.publicKey || !userBData?.publicKey) {
+      return res.status(400).json({ message: "Public key missing" });
+    }
+
     return res.json({
-      exists: true,
-      userA: existing.userA.toString(),
-      userB: existing.userB.toString(),
-      encryptedKeyForA: existing.encryptedKeyForA,
-      encryptedKeyForB: existing.encryptedKeyForB,
+      exists: false,
+      userA,
+      userB,
+      publicKeyA: userAData.publicKey,
+      publicKeyB: userBData.publicKey,
     });
   } catch (err) {
     console.error(err);
@@ -46,19 +58,9 @@ router.post("/key", async (req, res) => {
       encryptedKeyForA,
       encryptedKeyForB,
     } = req.body;
-
-     if (!encryptedKeyForA || !encryptedKeyForB) {
-      return res.status(400).json({ message: "Invalid key payload" });
-    }
-     const userAData = await User.findById(userA);
-    const userBData = await User.findById(userB);
-
-    if (!userAData?.publicKey || !userBData?.publicKey) {
-      return res.status(400).json({ message: "Users not crypto-ready" });
-    }
-    const existing = await ChatKey.findOne({ chatId });
+      const existing = await ChatKey.findOne({ chatId });
     if (existing) {
-    return res.json(existing);
+      return res.json(existing);
     }
     const saved = await ChatKey.create({
       chatId,
@@ -75,4 +77,10 @@ router.post("/key", async (req, res) => {
   }
 });
 
-export default router;
+router.delete("/key/:chatId", async (req, res) => {
+  await ChatKey.deleteOne({ chatId: req.params.chatId });
+  res.json({ ok: true });
+});
+
+
+export default router; 
