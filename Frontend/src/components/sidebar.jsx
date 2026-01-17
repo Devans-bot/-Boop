@@ -131,23 +131,23 @@ const Sidebar = () => {
 
       {/* MOBILE SIDEBAR + TOGGLER */}
       <div
-        className={`absolute md:hidden z-50 top-0 left-0 h-full
+        className={`absolute md:hidden z-50 top-16 left-0 h-full
           ${isopen ? "pointer-events-auto" : "pointer-events-none"}
         `}
       >
         {/* toggle button – always clickable */}
         <button
-          className="w-4 h-16 bg-base-300 rounded-r-xl flex items-center justify-start pointer-events-auto mt-16"
-          onClick={() => setisopen((prev) => !prev)}
+          className="w-5 h-36 bg-primary/30 text-accent rounded-r-xl flex items-center justify-start pointer-events-auto mt-16"
+         onClick={() => setisopen(prev => !prev)}
         >
-          <ChevronRight />
+          <ChevronRight size={50} />
         </button>
 
         {/* sliding panel – always mounted, start off-screen */}
         <div
           ref={panelRef}
       className="
-      absolute mt-16  
+      absolute mt-4
       w-36 
       h-2/4
       bg-primary/40 backdrop-blur-md

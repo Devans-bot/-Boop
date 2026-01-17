@@ -1,8 +1,11 @@
-import { Cross, Image, Loader, Plus, Send, X } from 'lucide-react'
+import { Cross, Image, Loader, Plus, Send, Smile, X } from 'lucide-react'
 import React, { useRef, useState } from 'react'
 import toast from 'react-hot-toast'
 import { useChatStore } from '../store/usechatstore'
 import { useauthstore } from '../store/useauthstore'
+import EmojiPicker from "emoji-picker-react";
+import useOutsideClick from './useoutside'
+
 
 // 🔹 Compress a base64 data URL -> smaller base64 JPEG
 const compressDataUrl = (dataUrl, maxWidth = 800, maxHeight = 800, quality = 0.6) => {
@@ -49,7 +52,10 @@ const Inputbox = () => {
   const [imagesending, setimagesending] = useState(false)
   const fileInputRef = useRef(null)
   const {socket}=useauthstore()
-
+ const [showEmoji, setShowEmoji] = useState(false);
+  const emojiref=useRef()
+  
+  useOutsideClick(emojiref,()=>setShowEmoji(false))
   // 🔹 Simple, reliable preview (like your original code)
   const handleimagechange = (e) => { 
     const file = e.target.files?.[0]
@@ -115,7 +121,7 @@ const Inputbox = () => {
   }
 
   return (
-    <div className='absolute bottom-0 mb-11 md:mb-16 bg-base-100 p-2 w-full pt-3 flex flex-col gap-1 justify-start'>
+    <div className='absolute bottom-0 mb-11 md:mb-16  p-2 w-full pt-3 flex flex-col gap-1 justify-start'>
 
       {imagepreview && (
         <div className='h-16 w-16 flex items-center justify-center relative'>
@@ -138,7 +144,8 @@ const Inputbox = () => {
 
       <form onSubmit={handlesubmit} className='w-full flex items-center'>
         <div className='w-full flex items-center gap-3'>
-
+           
+       
           <input
             value={text}
             type="text"
@@ -164,7 +171,16 @@ const Inputbox = () => {
           >
             <Image size={15} />
           </button>
-
+           
+               <button
+            type="button"
+            onClick={() => setShowEmoji(v => !v)}
+           className="w-8 h-8 rounded-full bg-primary/70 flex items-center justify-center"
+             >
+            <Smile/>
+            </button>
+          
+          
           <button
             type='submit'
             className={`w-8 h-8 rounded-full bg-primary/70 flex items-center justify-center ${
@@ -173,6 +189,15 @@ const Inputbox = () => {
           >
             <Send size={15}/>
           </button>
+          {showEmoji && (
+        <div ref={emojiref} className="absolute bottom-16 right-0">
+          <EmojiPicker
+            onEmojiClick={(emoji) =>
+              settext(prev => prev + emoji.emoji)
+            }
+          />
+        </div>
+      )}
         </div>
       </form>
     </div>

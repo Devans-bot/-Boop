@@ -118,22 +118,22 @@ useEffect(() => {
 
   return (
     <>
-      <div className="w-screen lg:w-8/12 md:w-9/12 flex flex-col pb-32 relative h-full">
+      <div className="w-screen lg:w-8/12 md:w-9/12 flex flex-col relative h-full">
         <Chatbar />
 
         <div
           ref={messagesContainerRef}
-          className="flex-1 min-h-0 font-semibold bg-base-100 overflow-y-auto p-4 space-y-4"
+          className="flex-1  min-h-0 font-semibold bg-base-100 overflow-y-auto space-y-4"
         >
           {messages.map((message) => (
             <div
               key={message._id}
-              className={`chat ${
+              className={`chat px-4 ${
                 message.senderId === authUser._id ? 'chat-end' : 'chat-start'
               }`}
             >
               {/* Profile pic */}
-              <div className="hidden md:block chat-image avatar">
+              <div className="hidden  md:block chat-image avatar">
                 <div className="size-10 rounded-full border">
                   <img
                     src={
@@ -175,11 +175,11 @@ useEffect(() => {
                 </div>
             </div>
           ))}
-        </div>
-
-        <div className="border-t bg-base-100">
            <Inputbox />
         </div>
+
+          
+        
       </div>
 
       {/* 🔹 Full-screen image preview overlay */}

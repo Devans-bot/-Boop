@@ -7,7 +7,7 @@ import { useauthstore } from '../store/useauthstore';
 
 const Chatbar = () => {
 
-    const {selecteduser,setselecteduser}=useChatStore()
+    const {selecteduser,setselecteduser,clearSelectedUser}=useChatStore()
     const{onlineUsers}=useauthstore()
 
   
@@ -39,7 +39,7 @@ const Chatbar = () => {
 
        <div className='w-6 h-6 flex items-center justify-center rounded-full bg-base-200'>
         <X size={18}
-        onClick={()=>setselecteduser(null)}
+        onClick={()=>clearSelectedUser()}
         />
        </div>
     </div>
