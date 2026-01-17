@@ -118,7 +118,7 @@ useEffect(() => {
 
   return (
     <>
-      <div className="w-full lg:w-8/12 md:w-9/12 flex flex-col  relative h-full">
+      <div className="w-screen lg:w-8/12 md:w-9/12 flex flex-col pb-32 relative h-full">
         <Chatbar />
 
         <div

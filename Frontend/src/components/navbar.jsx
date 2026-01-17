@@ -46,7 +46,7 @@ const handleremove=async()=>{
 
   
   return (
-   <header className='w-full z-50 fixed top-0 bg-base-100 shadow-[0_4px_6px_-1px_rgba(0,0,0,0.2)] '>
+   <header className='w-screen z-50 fixed top-0 bg-base-100 shadow-[0_4px_6px_-1px_rgba(0,0,0,0.2)] '>
 
        <div className='flex items-center p-1 md:p-3 justify-between'>
 
@@ -171,3 +171,4 @@ const handleremove=async()=>{
 }
 
 export default Navbar
+
