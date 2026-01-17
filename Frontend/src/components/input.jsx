@@ -196,7 +196,17 @@ const Inputbox = () => {
             <Send size={20}/>
           </button>
           {showEmoji && (
-        <div ref={emojiref} className="absolute bottom-20 right-2">
+        <div ref={emojiref} 
+         className="
+      absolute bottom-20 right-2
+      rounded-xl
+      backdrop-blur-md
+      bg-primary/30
+      border-none
+      rounded-2xl
+      p-1
+    "
+      >
           <EmojiPicker
            searchDisabled={true}
            previewConfig={{showPreview:false}}

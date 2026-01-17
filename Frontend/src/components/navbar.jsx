@@ -58,7 +58,7 @@ const handleremove=async()=>{
              hover:scale-105'>          
             <MessageSquare className="size-4 text-primary " />
              </div>
-             <h3 className='font-semibold' >Chatty</h3>
+             <h3 className='font-semibold' >Boop 🙊</h3>
              </div>
             </Link>
            

@@ -37,8 +37,8 @@ const Chatbar = () => {
         </div>
        </div>
 
-       <div className='w-6 h-6 flex items-center justify-center rounded-full bg-base-200'>
-        <X size={18}
+       <div className='w-6 h-6 flex items-center justify-center rounded-full bg-base-300'>
+        <X size={14}
         onClick={()=>clearSelectedUser()}
         />
        </div>

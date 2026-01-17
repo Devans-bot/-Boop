@@ -9,6 +9,23 @@
   }
 }
 
+.EmojiPickerReact {
+  /* DaisyUI-based colors */
+  --epr-bg-color: hsl(var(--p) / 0.30);
+  --epr-emoji-area-bg-color: hsl(var(--p) / 0.22);
+  --epr-category-label-bg-color: hsl(var(--p) / 0.35);
+  --epr-search-input-bg-color: hsl(var(--b1) / 0.8);
+  --epr-picker-border-color: hsl(var(--bc) / 0.12);
+
+  background-color: hsl(var(--p) / 9) !important;
+
+  border-radius: var(--rounded-box);
+}
+
+
+
+
+
 /* Hide scrollbar for Chrome, Safari, Edge */
 .hide-scrollbar::-webkit-scrollbar {
   display: none;

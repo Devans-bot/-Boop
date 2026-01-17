@@ -137,7 +137,7 @@ const Sidebar = () => {
       >
         {/* toggle button – always clickable */}
         <button
-          className="w-5 h-36 bg-primary/30 text-accent rounded-r-xl flex items-center justify-start pointer-events-auto mt-16"
+          className="w-4 h-28 bg-primary/30 text-accent rounded-r-xl flex items-center justify-start pointer-events-auto mt-16"
          onClick={() => setisopen(prev => !prev)}
         >
           <ChevronRight size={50} />
@@ -148,7 +148,7 @@ const Sidebar = () => {
           ref={panelRef}
       className="
       absolute mt-4
-      w-36 
+      w-34
       h-2/4
       bg-primary/40 backdrop-blur-md
       flex flex-col
@@ -158,8 +158,7 @@ const Sidebar = () => {
     "        >
           <div className="w-full text-xs md:text-lg p-1 pl-2 flex flex-col gap-4">
              <div className="flex gap-2 items-center justify-start">
-                 <Users size={15} />
-            <span className="">contacts</span> 
+            <span className="font-semibold">Your Friends 😉</span> 
              </div>
              <div>
              <label
@@ -180,12 +179,12 @@ const Sidebar = () => {
       transition-all duration-200
     "
   />
-  <p>Online Friends</p>
+  <p>Online </p>
      </label>
           </div>
           </div>
 
-          <div className="w-full flex fle-1 mt-5 pb-5 overflow-y-auto mb-5 hide-scrollbar
+          <div className="w-full flex flex-1 mt-5 pb-5 overflow-y-auto mb-5 hide-scrollbar
           flex-col items-center gap-4">
             {visibleUsers.map((user) => (
               <button
@@ -200,7 +199,7 @@ const Sidebar = () => {
                 }}
                 className="pt-2 pb-2 p-3 flex w-full justify-start items-center gap-2"
               >
-                <div className="w-14 relative h-14 lg:w-16 lg:h-16">
+                <div className="w-11 relative h-11 lg:w-16 lg:h-16">
                   <img
                     src={user.profilePic}
                     className={`w-full h-full object-center  rounded-full border-2 border-neutral ${
@@ -216,7 +215,7 @@ const Sidebar = () => {
                     <Circle className="  size-4" />
                   </div>
                 </div>
-                <div className="flex  flex-col items-start justify-center">
+                <div className="flex pl-1 flex-col items-start justify-center">
                   <span className="font-semibold">{user.fullName}</span>
                  {onlineUsers.includes(user._id)? <p className="text-xs">Online</p>: <p className="text-xs">Offline</p>}
                 </div>
