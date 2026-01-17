@@ -224,22 +224,26 @@ export const addfriend = async (req, res) => {
     await frnd.save()
 
 
-    const userSocket = userSocketMap[userId.toString()];
-    const friendSocket = userSocketMap[friendId.toString()];
+    const userSockets = userSocketMap[userId.toString()];
+    const friendSockets = userSocketMap[friendId.toString()];
 
-    if (userSocket) {
-      io.to(userSocket).emit("friend:update", {
-        action: "add_or_remove",
-        by: userId,
-      });
-    }
+   if (userSockets) {
+  [...userSockets].forEach(socketId => {
+    io.to(socketId).emit("friend:update", {
+      action: "add_or_remove",
+      by: userId,
+    });
+  });
+}
 
-    if (friendSocket) {
-      io.to(friendSocket).emit("friend:update", {
-        action: "add",
-        by: userId,
-      });
-    }
+if (friendSockets) {
+  [...friendSockets].forEach(socketId => {
+    io.to(socketId).emit("friend:update", {
+      action: "add",
+      by: userId,
+    });
+  });
+}
 
 
     // Now return friend list + message in ONE response
@@ -293,17 +297,19 @@ export const sendrequest=async(req,res)=>{
 
     await frnd.save()
      
- const receiverSocketId = userSocketMap[friendId.toString()];
+     const receiverSockets = userSocketMap[friendId.toString()];
 
-    if (receiverSocketId) {
-      io.to(receiverSocketId).emit("friendRequest:new", {
-        from: {
-          _id: user._id,
-          fullName: user.fullName,
-          profilePic: user.profilePic,
-        },
-      });
-    }
+    if (receiverSockets) {
+  [...receiverSockets].forEach(socketId => {
+    io.to(socketId).emit("friendRequest:new", {
+      from: {
+        _id: user._id,
+        fullName: user.fullName,
+        profilePic: user.profilePic,
+      },
+    });
+  });
+}
 
     res.json({message:`Chat request send to ${frnd.fullName} ☺️`})
     } catch (error) {

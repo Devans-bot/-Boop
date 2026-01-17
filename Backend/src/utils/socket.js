@@ -21,19 +21,25 @@ export {userSocketMap}
 
 io.on("connection",(socket)=>{
 
-    console.log("A user connected ",socket.id);
     const userId = socket.handshake?.auth?.userId;
 
+if (!userSocketMap[userId]) {
+    userSocketMap[userId] = new Set();
+  }
 
-if(userId) {
-  userSocketMap[userId]=socket.id;
-}
+    userSocketMap[userId].add(socket.id);
+
 
 io.emit("getOnlineUsers", Object.keys(userSocketMap));
 
 socket.on("disconnect", () => {
     console.log("A user disconnected", socket.id);
-    delete userSocketMap[userId];
+  if (userSocketMap[userId]) {
+      userSocketMap[userId].delete(socket.id);
+       if (userSocketMap[userId].size === 0) {
+        delete userSocketMap[userId];
+      }
+    }
     io.emit("getOnlineUsers", Object.keys(userSocketMap));
   });
 
@@ -41,7 +47,7 @@ socket.on("disconnect", () => {
 });
 
 export const getReceiverSocketId = (receiverId) => {
-  return userSocketMap[receiverId];
+  return userSocketMap[receiverId]  ? Array.from(userSocketMap[receiverId]) : [];;
 };
 
 

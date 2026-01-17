@@ -41,7 +41,7 @@ export const sendmessages = async (req, res) => {
 
     if (myId !== a && myId !== b) {
   return res.status(403).json({ message: "Invalid chat access" });
-}
+    }
 
     const normalizedChatId = [a, b].sort().join("_");
     const receiverId = myId === a ? b : a;
@@ -64,11 +64,13 @@ export const sendmessages = async (req, res) => {
       image: imageUrl,
     });
 
-  const receiverSocketId = getReceiverSocketId(receiverId);
+  const receiverSocketIds = getReceiverSocketId(receiverId);
 
-  if (receiverSocketId) {
-    io.to(receiverSocketId).emit("receiveMessage", message);
-  }
+  if (receiverSocketIds && receiverSocketIds.length > 0) {
+  receiverSocketIds.forEach((socketId) => {
+    io.to(socketId).emit("receiveMessage", message);
+  });
+}
 
     res.status(201).json(message);
   } catch (err) {

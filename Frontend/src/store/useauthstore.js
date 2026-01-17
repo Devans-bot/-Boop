@@ -113,6 +113,7 @@ if (!key) {
 
 logOut: async () => {
   try {
+      get().disconnectSocket();
     await axiosinstance.post("/user/logout");
 
     localStorage.removeItem("selectedUser"); // 🔥 ADD
@@ -121,8 +122,8 @@ logOut: async () => {
       socket: null,
     });
 
-    get().disconnectSocket();
     toast.success("logged out");
+
   } catch (error) {
     console.log(error);
   }
