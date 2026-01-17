@@ -118,7 +118,7 @@ useEffect(() => {
 
   return (
     <>
-      <div className="w-screen lg:w-8/12 md:w-9/12 flex flex-col pb-32 relative min-h-[100dvh]">
+      <div className="w-full lg:w-8/12 md:w-9/12 flex flex-col  relative h-full">
         <Chatbar />
 
         <div
@@ -177,7 +177,9 @@ useEffect(() => {
           ))}
         </div>
 
-        <Inputbox />
+        <div className="border-t bg-base-100">
+           <Inputbox />
+        </div>
       </div>
 
       {/* 🔹 Full-screen image preview overlay */}

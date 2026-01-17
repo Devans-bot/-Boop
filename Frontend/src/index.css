@@ -8,6 +8,12 @@
     @apply bg-base-100 text-base-content;
   }
 }
+
+html,
+body,
+#root {
+  height: 100%;
+}
 /* Hide scrollbar for Chrome, Safari, Edge */
 .hide-scrollbar::-webkit-scrollbar {
   display: none;
