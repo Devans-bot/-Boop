@@ -147,7 +147,7 @@ const Sidebar = () => {
           ref={panelRef}
       className="
       absolute mt-4
-      w-34
+      w-32
       h-2/4
       bg-primary/40 backdrop-blur-md
       flex flex-col
@@ -179,12 +179,20 @@ const Sidebar = () => {
     "
   />
   <p>Online </p>
+  
      </label>
+  
           </div>
           </div>
 
           <div className="w-full flex flex-1 mt-5 pb-5 overflow-y-auto mb-5 hide-scrollbar
           flex-col items-center gap-4">
+            {(!users || users.length === 0) && (
+   <div className=" p-3 font-semibold text-sm flex justify-center items-center h-full w-full">
+    <p>Add a friend to chat 🐒💬</p>
+    </div>
+)}
+
             {visibleUsers.map((user) => (
               <button
                 key={user._id}

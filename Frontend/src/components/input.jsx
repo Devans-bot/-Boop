@@ -204,7 +204,7 @@ transition-all duration-200 ease-out
             type="text"
             onChange={(e)=>settext(e.target.value)}
             placeholder="Chat"
-            className="input input-bordered focus:outline-none w-full rounded-xl"
+            className="input input-bordered focus:outline-none w-full pr-12 rounded-xl"
           />
            </div>
          
