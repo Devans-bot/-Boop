@@ -15,7 +15,7 @@ export const useChatStore=create((set,get)=>({
     isMessagesloading:false,
     sendLoad:false,
     isopen:false,
-    text:null,
+    text:"",
 
     getUsers:async()=>{
         set({isUsersloading:true})
@@ -128,9 +128,15 @@ export const useChatStore=create((set,get)=>({
     set({isopen:value})
   },
   
-  settext:(value)=>{
-    set({text:value})
-  },
+settext: (value) => {
+  set(state => ({
+    text: typeof value === "function"
+      ? value(state.text)
+      : value ?? ""
+  }));
+},
+
+
 
 
 

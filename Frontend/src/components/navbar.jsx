@@ -26,9 +26,6 @@ useEffect(()=>{
    },[getUsers])
 
 
-
- 
-
     const isFriend = (id) =>
     friends?.some((friend) => friend._id === id);
 
@@ -56,7 +53,7 @@ const handleremove=async()=>{
              <div className='flex items-center gap-2 transition-all duration-200 ease-out
   active:scale-95
   active:translate-y-0 
-  md:hover:bg-primary/40'>        
+  md:hover:scale-110'>        
             <div className='rounded-xl w-9 h-9 flex items-center  justify-center  bg-primary/20 '>          
               <p className='text-3xl'>🙊</p>
              </div>

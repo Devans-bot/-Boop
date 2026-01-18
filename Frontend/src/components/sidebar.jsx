@@ -53,7 +53,7 @@ const Sidebar = () => {
   return (
     <>
       {/* DESKTOP SIDEBAR */}
-      <div className="overflow-y-hidden overflow-x-hidden bg-primary/20 hidden md:flex flex-col items-start rounded-xl w-2/12 lg:w-4/12 md:w-3/12">
+      <div className="overflow-y-hidden overflow-x-hidden bg-primary/20 hidden md:flex flex-col items-start rounded-l-xl w-2/12 lg:w-4/12 md:w-3/12">
         <div className=" flex text-xs pl-3 pt-3 flex-col gap-4">
         
          <div className="flex gap-3">

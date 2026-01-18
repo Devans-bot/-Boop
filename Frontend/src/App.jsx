@@ -41,7 +41,7 @@ const App = () => {
   if(isCheckingAuth && !authUser){
     return(
       <div className="flex items-center justify-center h-screen">
-        <MonkeyLoader/>
+        <MonkeyLoader text={"Boop is Loading !"} size={"text-5xl"}/>
       </div>
     )
   }

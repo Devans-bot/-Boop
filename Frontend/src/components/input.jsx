@@ -5,6 +5,7 @@ import { useChatStore } from '../store/usechatstore'
 import { useauthstore } from '../store/useauthstore'
 import EmojiPicker from "emoji-picker-react";
 import useOutsideClick from './useoutside'
+import MonkeyLoader from './monkeyloader'
 
 
 // 🔹 Compress a base64 data URL -> smaller base64 JPEG
@@ -45,8 +46,9 @@ const compressDataUrl = (dataUrl, maxWidth = 800, maxHeight = 800, quality = 0.6
 }
 
 const Inputbox = () => {
-  const { sendmessages ,selecteduser,setSendLoad} = useChatStore()
-  const [text, settext] = useState("")
+  const { sendmessages ,selecteduser,setSendLoad,} = useChatStore()
+  const text = useChatStore(state => state.text);
+  const settext = useChatStore(state => state.settext);
   const [imagepreview, setimagepreview] = useState(null)   // for UI only
   const [rawImage, setRawImage] = useState(null)           // original base64 for compression
   const [imagesending, setimagesending] = useState(false)
@@ -56,7 +58,8 @@ const Inputbox = () => {
   const emojiref=useRef()
   const isMobile = window.innerWidth < 640;
 
-  useOutsideClick(emojiref,()=>setShowEmoji(false))
+  useOutsideClick(emojiref,()=>setShowEmoji(prev=>!prev))
+
   // 🔹 Simple, reliable preview (like your original code)
   const handleimagechange = (e) => { 
     const file = e.target.files?.[0]
@@ -121,11 +124,12 @@ const Inputbox = () => {
   }
 
   return (
-    <div className='border-2 border-primary/10 rounded-t-xl px-2 w-full py-3 flex flex-col gap-1 justify-start'>
-
-      {imagepreview && (
-        <div className='h-16 w-16 flex items-center justify-center relative'>
-          <img src={imagepreview} className='rounded-md h-14 w-14 object-cover' alt="" />
+    <>
+ 
+      <div className='border-2 border-primary/10 rounded-t-xl px-2 w-full py-3 flex flex-col gap-1 relative justify-start'>
+         {imagepreview && (
+<div className="absolute bottom-16 p-2 rounded-lg bg-base-100 inline-block ">
+          <img src={imagepreview} className='rounded-md w-36 object-cover' alt="" />
           <button
             type="button"
             onClick={handleremove}
@@ -134,16 +138,17 @@ transition-all duration-200 ease-out
  active:scale-95
  active:translate-y-0 
  md:hover:bg-primary/40
-           absolute top-0 right-0 h-5 w-5 flex items-center justify-center rounded-full bg-gray-200'
+           absolute top-0 right-0  flex items-center justify-center rounded-full bg-gray-200'
           >
-            <X size={14} />
+            <X size={25} />
           </button>
         </div>
       )}
 
       { imagesending  && rawImage &&(
-        <div className='h-16 w-16 flex items-center justify-center relative'>
-          <Loader className="size-5 animate-spin" />
+        <div className=' h-full w-full flex items-center justify-center gap-2'>
+          <MonkeyLoader  size={"text-3xl"}/>
+          <p className='text-sm'>Image sending...</p>
         </div>
       )}
 
@@ -180,8 +185,8 @@ transition-all duration-200 ease-out
             onClick={() => setShowEmoji(v => !v)}
             className={`
             transition-all duration-200 ease-out
- active:scale-95
- md:hover:bg-primary/40
+            active:scale-95
+            md:hover:bg-primary/40
             absolute right-3 top-1/2 -translate-y-1/2  w-8 h-8 rounded-full  flex items-center justify-center text-base-content`}             >
             <Smile/>
             </button>
@@ -192,7 +197,7 @@ transition-all duration-200 ease-out
          autoCorrect="off"
           spellCheck={false}
            inputMode="text"
-            value={text}
+            value={text ?? ""}
             type="text"
             onChange={(e)=>settext(e.target.value)}
             placeholder="Chat"
@@ -213,7 +218,11 @@ transition-all duration-200 ease-out
           >
             <Send size={20}/>
           </button>
-          {showEmoji && (
+         
+        </div>
+      </form>
+
+       {showEmoji && (
         <div ref={emojiref} 
          className="
       absolute bottom-20 right-2
@@ -227,19 +236,27 @@ transition-all duration-200 ease-out
       >
           <EmojiPicker
            searchDisabled={true}
+           emojiStyle="native"
+
            previewConfig={{showPreview:false}}
            width={isMobile ? 290 : 340}
           height={isMobile ? 380 : 440}
           emojiSize={isMobile ? 40 : 34}
-            onEmojiClick={(emoji) =>
-              settext(prev => prev + emoji.emoji)
-            }
+         onEmojiClick={(emojiData) => {
+  const emoji = emojiData?.emoji;
+  if (!emoji) return;
+
+  settext(prev => String(prev ?? "") + emoji);
+}}
+
+
           />
         </div>
       )}
-        </div>
-      </form>
     </div>
+    
+    </>
+  
   )
 }
 

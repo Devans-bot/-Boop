@@ -7,6 +7,7 @@ import { useauthstore } from '../store/useauthstore'
 import { getSharedAESKey } from '../utils/chatkey'
 import { getEmojiType, splitTextAndEmojis } from './emojis'
 import MonkeyLoader from './monkeyloader'
+import { formatTime } from './formattme'
 
 
 const Chatcontainer = () => {
@@ -84,7 +85,7 @@ useEffect(() => {
   if (isMessagesloading)
     return (
       <div className="flex w-full items-center justify-center h-screen">
-     <MonkeyLoader/>
+     <MonkeyLoader text={"Chats are Loading.."} size={"text-5xl"}/>
       </div>
     )
 
@@ -162,7 +163,7 @@ useEffect(() => {
                   text-sm
                   sm:p-2
                   sm:text-sm
-                  flex items-center justify-center flex-col
+                  flex flex-col items-center justify-center 
                   ${
                     message.senderId === authUser._id
                       ? 'bg-primary/30 text-base-content/70'
@@ -174,12 +175,12 @@ useEffect(() => {
                   <img
                     src={message.image}
                     alt="Attachment"
-                    className="lg:w-60 w-24 rounded-md mb-2 cursor-pointer"
+                    className="lg:w-60 w-56 rounded-md mb-3 cursor-pointer"
                     onClick={() => setPreviewImage(message.image)} // 🔹 open preview
                   />
                 )}
                {message.text && (
-            <p className="text-md md:text-xs leading-[1.4] break-words">
+            <p className="text-md w-full md:text-xs leading-[1.4] break-words">
            {splitTextAndEmojis(message.text).map((part, i) =>
              /\p{Extended_Pictographic}/u.test(part) ? (
              <span
@@ -194,7 +195,10 @@ useEffect(() => {
           )}
               </p>
            )}
-
+            
+           <span className="text-[8px] pt-2 opacity-50 self-end leading-none">
+            {formatTime(message.createdAt)}
+            </span>
                 </div>
            </div>
                

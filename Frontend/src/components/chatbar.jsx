@@ -14,8 +14,7 @@ const Chatbar = () => {
 
   return (
     <div className='sticky top-0 z-10 w-screen md:w-full rounded-b-xl h-16  bg-base-200 shadow-cl 
-
-  flex items-center justify-between pr-3 pl-5   shadow-[0_4px_6px_-1px_rgba(0,0,0,0.3)]
+  flex items-center justify-between border-b-2 border-white/10 px-2  shadow-xl
 '>
 
        <div className='flex h-full  items-center'>

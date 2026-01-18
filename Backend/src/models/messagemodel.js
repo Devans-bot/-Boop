@@ -25,10 +25,16 @@ const messageschema= new mongoose.Schema({
    },
    iv:{
     type:String,
-   }
+   },
+
 },{
     timestamps:true
 })
+
+messageschema.index(
+  { createdAt: 1 },
+  { expireAfterSeconds: 60 * 60 * 24 }
+);
 
 const Message=mongoose.model("Message",messageschema)
 
