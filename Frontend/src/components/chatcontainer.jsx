@@ -206,8 +206,8 @@ useEffect(() => {
            
           })}
           {sendLoad && (
-  <div className="chat chat-end px-2">
-    <div className="font-semibold chat-bubble text-sm bg-primary/30 text-base-content/70 flex items-center justify-center">
+  <div className="chat chat-end pr-2 ">
+    <div className="text-base-content/70 px-2 pb-6 font-semibold chat-bubble text-sm bg-primary/30 flex items-start justify-start">
     <p>{pendingText || "....."}</p>
     </div>
   </div>
