@@ -6,6 +6,7 @@ import { useChatStore } from '../store/usechatstore'
 import { useauthstore } from '../store/useauthstore'
 import { getSharedAESKey } from '../utils/chatkey'
 import { getEmojiType, splitTextAndEmojis } from './emojis'
+import MonkeyLoader from './monkeyloader'
 
 
 const Chatcontainer = () => {
@@ -83,7 +84,7 @@ useEffect(() => {
   if (isMessagesloading)
     return (
       <div className="flex w-full items-center justify-center h-screen">
-        <Loader className="size-10 animate-spin" />
+     <MonkeyLoader/>
       </div>
     )
 
@@ -128,17 +129,19 @@ useEffect(() => {
 
               return (
 
-                 <>
+                 
             
             <div
               key={message._id}
-              className={`chat  px-4 ${
+              className={`chat  px-2 ${
                 message.senderId === authUser._id ? 'chat-end' : 'chat-start '
               }`}
             >
               {/* Profile pic */}
-              <div className="hidden  md:block chat-image avatar">
-                <div className="size-10 rounded-full border">
+              <div className=" hidden md:block chat-image avatar">
+                <div 
+                className={`border-2 size-6 md:size-10 rounded-full 
+                    `}>
                   <img
                     src={
                       message.senderId === authUser._id
@@ -194,7 +197,7 @@ useEffect(() => {
 
                 </div>
            </div>
-               </>
+               
               )
            
           })}
@@ -228,7 +231,12 @@ useEffect(() => {
             {/* Close button */}
             <button
               onClick={handleClosePreview}
-              className="absolute top-3 right-3 rounded-full bg-black/70 p-2 text-white hover:bg-black/90"
+              className="
+               transition-all duration-200 ease-out
+               active:scale-95
+               active:translate-y-0 
+              md:hover:bg-primary/40
+              absolute top-3 right-3 rounded-full bg-black/70 p-2 text-white hover:bg-black/90"
             >
               <X size={18} />
             </button>
@@ -236,7 +244,12 @@ useEffect(() => {
             {/* Download button */}
            <button
   onClick={() => downloadImage(previewImage)}
-  className="absolute bottom-3 right-3 flex items-center gap-1 rounded-full bg-white/90 px-3 py-1 text-sm font-medium text-gray-900 hover:bg-white"
+  className=" 
+   transition-all duration-200 ease-out
+               active:scale-95
+               active:translate-y-0 
+              md:hover:bg-primary/40
+  absolute bottom-3 right-3 flex items-center gap-1 rounded-full bg-white/90 px-3 py-1 text-sm font-medium text-gray-900 hover:bg-white"
 >
   <Download size={16} />
   Download

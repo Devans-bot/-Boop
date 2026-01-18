@@ -129,7 +129,12 @@ const Inputbox = () => {
           <button
             type="button"
             onClick={handleremove}
-            className='absolute top-0 right-0 h-5 w-5 flex items-center justify-center rounded-full bg-gray-200'
+            className='
+transition-all duration-200 ease-out
+ active:scale-95
+ active:translate-y-0 
+ md:hover:bg-primary/40
+           absolute top-0 right-0 h-5 w-5 flex items-center justify-center rounded-full bg-gray-200'
           >
             <X size={14} />
           </button>
@@ -155,7 +160,12 @@ const Inputbox = () => {
 
           <button
             type='button'
-            className={`w-9 h-9 rounded-full bg-primary/70 flex items-center justify-center ${
+            className={`
+              transition-all duration-200 ease-out
+ active:scale-95
+ active:translate-y-0 
+ md:hover:bg-primary/40
+              w-9 h-9 rounded-full bg-primary/70 flex items-center justify-center ${
               imagepreview ? 'text-green-600' : 'text-base-content'
             }`}
             onClick={() => fileInputRef?.current?.click()}
@@ -168,7 +178,11 @@ const Inputbox = () => {
            <button
             type="button"
             onClick={() => setShowEmoji(v => !v)}
-            className={`absolute right-3 top-1/2 -translate-y-1/2  w-8 h-8 rounded-full  flex items-center justify-center text-base-content`}             >
+            className={`
+            transition-all duration-200 ease-out
+ active:scale-95
+ md:hover:bg-primary/40
+            absolute right-3 top-1/2 -translate-y-1/2  w-8 h-8 rounded-full  flex items-center justify-center text-base-content`}             >
             <Smile/>
             </button>
 
@@ -189,7 +203,11 @@ const Inputbox = () => {
           
           <button
             type='submit'
-            className={`w-12 h-10 rounded-full bg-primary/70 flex items-center justify-center ${
+            className={`
+              transition-all duration-200 ease-out
+ active:scale-95
+ active:translate-y-0 
+ md:hover:bg-primary/40 w-12 h-10 rounded-full bg-primary/70 flex items-center justify-center ${
               imagepreview || text ? 'text-orange-400' : 'text-base-content'
             }`}
           >

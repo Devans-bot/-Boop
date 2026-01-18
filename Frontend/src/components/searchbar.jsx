@@ -216,7 +216,12 @@ useEffect(() => {
 
 
                  <button onClick={()=>handlesendreqst(user._id)}
-                 className={`w-6 h-6 rounded-full hover:scale-90 text-base-100 flex items-center justify-center p-1
+                 className={`
+                  transition-all duration-200 ease-out
+                   active:scale-95
+                   active:translate-y-0 
+                   md:hover:bg-primary/40
+                  w-6 h-6 rounded-full hover:scale-90 text-base-100 flex items-center justify-center p-1
                    ${isFriend(user._id)?"bg-red-400":"bg-green-400"}
                  `}>
                 <UserPlus/>

@@ -53,21 +53,27 @@ const handleremove=async()=>{
             <Link to="/"
             onClick={()=>clearSelectedUser()}
             > 
-             <div className='flex items-center gap-2'>        
-            <div className='rounded-xl w-9 h-9 flex items-center  justify-center text-center bg-primary/20  transition duration-300 
-             hover:scale-105'>          
-            <MessageSquare className="size-4 text-primary " />
+             <div className='flex items-center gap-2 transition-all duration-200 ease-out
+  active:scale-95
+  active:translate-y-0 
+  md:hover:bg-primary/40'>        
+            <div className='rounded-xl w-9 h-9 flex items-center  justify-center  bg-primary/20 '>          
+              <p className='text-3xl'>🙊</p>
              </div>
-             <h3 className='font-semibold' >Boop 🙊</h3>
+             <h3 className='font-semibold' >Boop</h3>
              </div>
             </Link>
            
 
           <div className=' gap-3 items-center  flex'>
             
-                         <Link to="/settings" className='no-underline '>
-
-            <div className='flex bg-black/30 text-sm rounded-lg p-2 hover:bg-black/70'>
+             <Link to="/settings" className='no-underline '>
+            <div className='
+            transition-all duration-200 ease-out
+  active:scale-95
+  active:translate-y-0 
+  md:hover:bg-primary/40 
+            flex bg-base-300 text-sm rounded-lg p-2 hover:bg-black/40'>
                 <Settings className='size-5'/>
                 <p className='hidden md:block'>Settings</p>
             </div>
@@ -76,14 +82,18 @@ const handleremove=async()=>{
             {authUser && (<>
             <Link to="/profilepage" className='no-underline'>   
 
-             <div className='flex bg-black/30 text-sm rounded-lg p-2 hover:bg-black/70'>
+             <div className='transition-all duration-200 ease-out
+  active:scale-95
+  active:translate-y-0 
+  md:hover:bg-primary/40 flex bg-base-300 text-sm rounded-lg p-2 hover:bg-black/40'>
                 <User className='size-5'/>
                  <h3 className='hidden md:block'>Profile</h3>
              </div>
               </Link>
 
            
-               <div ref={bellref} className=' flex' >
+               <div ref={bellref} className='
+               flex bg-base-300 text-sm rounded-lg p-2 hover:bg-black/40' >
                   <button className='relative' onClick={()=>
                     setbellisopen(prev=>!prev)
                   }>
@@ -97,7 +107,7 @@ const handleremove=async()=>{
              </button>
              {bellisopen && (
 
-              <div  className=' absolute top-10 right-3 w-3/5  md:w-2/6 p-3 flex flex-col items-start justify-center jus rounded-2xl backdrop-blur-lg bg-primary/40 z-50'>
+              <div  className='mt-3 absolute top-10 right-3 w-3/5  md:w-2/6 p-3 flex flex-col items-start justify-center jus rounded-2xl backdrop-blur-lg bg-primary/40 z-50'>
               
               {userRequests.length>0 && (<button onClick={handleremove}>
                 <XCircle size={18}/>
@@ -128,7 +138,12 @@ const handleremove=async()=>{
                </div>
 
                  <button onClick={()=>handleaddfrnd(user._id)}
-                 className={`w-6 h-6 rounded-full  text-base-100 flex items-center justify-center p-1
+                 className={`
+                  transition-all duration-200 ease-out
+                   active:scale-95
+                   active:translate-y-0 
+                   md:hover:bg-primary/40
+                   w-6 h-6 rounded-full  text-base-100 flex items-center justify-center p-1
                    ${isFriend(user._id)?"bg-red-400":"bg-green-400"}
                  `}>
                   {isFriend(user._id)?<X/>:<Plus/>}
@@ -147,6 +162,7 @@ const handleremove=async()=>{
               onClick={submithandler}
               type="button"
               className="
+              
               flex items-center gap-2 text-sm
               bg-transparent p-2 rounded-lg
               hover:bg-black/30

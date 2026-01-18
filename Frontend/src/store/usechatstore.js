@@ -14,6 +14,7 @@ export const useChatStore=create((set,get)=>({
     isUsersloading:false,
     isMessagesloading:false,
     sendLoad:false,
+    isopen:false,
 
     getUsers:async()=>{
         set({isUsersloading:true})
@@ -119,6 +120,11 @@ export const useChatStore=create((set,get)=>({
 
   setSendLoad:(value)=>{
     set({sendLoad:value})
+  },
+  
+
+  setisopen:(value)=>{
+    set({isopen:value})
   },
 
   clearSelectedUser: () => {

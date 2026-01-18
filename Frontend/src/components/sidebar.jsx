@@ -7,12 +7,11 @@ import useOutsideClick from "./useoutside"
 import { useauthstore } from "../store/useauthstore"
 
 const Sidebar = () => {
-  const { getUsers, users, isUsersloading, selecteduser, setselecteduser } =
+  const { getUsers, users, isUsersloading,isopen,setisopen, selecteduser, setselecteduser } =
     useChatStore()
 
   const {onlineUsers}=useauthstore()
 
-  const [isopen, setisopen] = useState(false)
   const [showOnlineOnly,setShowOnlineOnly]=useState(false)
   const panelRef = useRef(null)
 

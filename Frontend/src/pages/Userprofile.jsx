@@ -74,7 +74,12 @@ const Userprofile = () => {
             />
            
           </div>
-          <button onClick={handlesubmit} className={`h-8 w-24 font-semibold rounded-xl text-base-content/70 text-xs  
+          <button onClick={handlesubmit} className={`
+          transition-all duration-200 ease-out
+           active:scale-95
+           active:translate-y-0 
+           md:hover:bg-primary/40
+          h-8 w-24 font-semibold rounded-xl text-base-content/70 text-xs  
              ${FriendState
              ? "bg-green-500 border-green-700 text-white"
            : "bg-red-500 border-red-700 text-white"}

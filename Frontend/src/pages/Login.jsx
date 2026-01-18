@@ -118,7 +118,12 @@ const Login = () => {
                 <button
                   type="button"
                   onClick={() => setshowpaswrd(!showpaswrd)}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 z-20 flex items-center justify-center bg-transparent border-none shadow-none focus:outline-none cursor-pointer p-0"
+                  className="
+                  transition-all duration-200 ease-out
+                   active:scale-95
+                   active:translate-y-0 
+                   md:hover:bg-primary/40
+                  absolute right-3 top-1/2 -translate-y-1/2 z-20 flex items-center justify-center bg-transparent border-none shadow-none focus:outline-none cursor-pointer p-0"
                 >
                   {showpaswrd ? (
                     <EyeOff className="size-5 text-base-content/40 pointer-events-none" />
@@ -130,7 +135,12 @@ const Login = () => {
             </div>
                   </div>
                   
-                  <button type='submit' className='w-full h-14 rounded-xl text-center  bg-primary/90 hover:bg-primary/30 hover:scale-105'>
+                  <button type='submit' className='
+                  transition-all duration-200 ease-out
+                   active:scale-95
+                   active:translate-y-0 
+                   md:hover:bg-primary/40
+                  w-full h-14 rounded-xl text-center  bg-primary/90 hover:bg-primary/30 hover:scale-105'>
                       <h3>Submit</h3>
                   </button>
                    </form>

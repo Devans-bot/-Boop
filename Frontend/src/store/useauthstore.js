@@ -93,7 +93,7 @@ logIn: async (data) => {
 
 const key = localStorage.getItem(`privateKey-${user._id}`);
 if (!key) {
-  throw new Error("Encryption key missing. Please re-register.");
+  toast.error("Key not present please log")
 }
     // 4️⃣ Connect socket AFTER auth + keys
     get().connectSocket();
@@ -138,7 +138,9 @@ logOut: async () => {
         set({searchedusers:res.data})
     } catch (error) {
         console.log(error)
-        toast.error("user not found")
+        toast("🐒 Oops… Boop couldn’t find user",{
+          duration:1000
+        })
     }finally{
         set({issearching:false})
     }
