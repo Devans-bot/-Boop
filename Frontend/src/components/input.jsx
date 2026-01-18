@@ -46,7 +46,7 @@ const compressDataUrl = (dataUrl, maxWidth = 800, maxHeight = 800, quality = 0.6
 }
 
 const Inputbox = () => {
-  const { sendmessages ,selecteduser,setSendLoad,} = useChatStore()
+  const { sendmessages ,selecteduser,setSendLoad,pendingText,setPendingText} = useChatStore()
   const text = useChatStore(state => state.text);
   const settext = useChatStore(state => state.settext);
   const [imagepreview, setimagepreview] = useState(null)   // for UI only
@@ -91,6 +91,10 @@ const Inputbox = () => {
     e.preventDefault()
     
     if (!text.trim() && !rawImage) return
+    const snapshot=text
+
+    setPendingText(snapshot)
+    settext("")
     setSendLoad(true)
     try {
       setimagesending(true)
@@ -108,12 +112,11 @@ const Inputbox = () => {
       }
 
      await sendmessages(
-  text,
+  snapshot,
   imageToSend,
    socket
 );
       setimagesending(false)
-      settext("")
       setimagepreview(null)
       setRawImage(null)
       if (fileInputRef.current) fileInputRef.current.value = ""
@@ -147,7 +150,7 @@ transition-all duration-200 ease-out
 
       { imagesending  && rawImage &&(
         <div className=' h-full w-full flex items-center justify-center gap-2'>
-          <MonkeyLoader  size={"text-3xl"}/>
+          <MonkeyLoader  size={"text-xl"}/>
           <p className='text-sm'>Image sending...</p>
         </div>
       )}

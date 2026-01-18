@@ -11,7 +11,7 @@ import { formatTime } from './formattme'
 
 
 const Chatcontainer = () => {
-  const { messages, selecteduser, getmessages, isMessagesloading,setSendLoad,sendLoad,text } = useChatStore()
+  const { messages, selecteduser, getmessages, isMessagesloading,setSendLoad,sendLoad,text,pendingText } = useChatStore()
   const { authUser ,socket} = useauthstore()
   const messagesContainerRef = useRef(null)
   const [previewImage, setPreviewImage] = useState(null)
@@ -207,8 +207,8 @@ useEffect(() => {
           })}
           {sendLoad && (
   <div className="chat chat-end px-2">
-    <div className=" chat-bubble text-xs bg-primary/30 text-base-content/70 flex items-center justify-center">
-    <p>{text || "....."}</p>
+    <div className="font-semibold chat-bubble text-sm bg-primary/30 text-base-content/70 flex items-center justify-center">
+    <p>{pendingText || "....."}</p>
     </div>
   </div>
 )}        

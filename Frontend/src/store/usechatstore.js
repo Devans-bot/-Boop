@@ -16,6 +16,11 @@ export const useChatStore=create((set,get)=>({
     sendLoad:false,
     isopen:false,
     text:"",
+    pendingText:"",
+
+    setPendingText: (value) => {
+    set({ pendingText: value ?? "" });
+  },
 
     getUsers:async()=>{
         set({isUsersloading:true})
