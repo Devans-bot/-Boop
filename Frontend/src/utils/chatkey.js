@@ -1,8 +1,20 @@
 import { axiosinstance } from "../store/axiosinstance";
 
+
+export function clearAESKeyCache() {
+  aesKeyCache.clear();
+}
+
+
+const aesKeyCache = new Map(); 
+
 let creatingChatKey = false;
 
 export async function getSharedAESKey(chatId) {
+    if (aesKeyCache.has(chatId)) {
+    return aesKeyCache.get(chatId);
+  }
+
   const deviceId = localStorage.getItem("deviceId");
   if (!deviceId) throw new Error("Device not registered");
 
@@ -66,11 +78,15 @@ export async function getSharedAESKey(chatId) {
     Uint8Array.from(atob(encryptedKey), c => c.charCodeAt(0))
   );
 
-  return crypto.subtle.importKey(
+  const aesKey = await crypto.subtle.importKey(
     "raw",
     rawKey,
     "AES-GCM",
     false,
     ["encrypt", "decrypt"]
   );
+
+  aesKeyCache.set(chatId, aesKey);
+
+  return aesKey;
 }

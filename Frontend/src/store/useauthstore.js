@@ -6,6 +6,7 @@ import { generateKeyPair } from "../utils/generatekey"
 import { useChatStore } from "./usechatstore"
 import { getDeviceId } from "../utils/getdeviceid"
 import { generateDeviceKeyPair } from "../utils/devicekey"
+import { clearAESKeyCache } from "../utils/chatkey"
 
 const BASE_URL = window.location.origin
 
@@ -137,6 +138,7 @@ logOut: async () => {
       authUser: null,
       socket: null,
     });
+    clearAESKeyCache();
 
     toast.success("logged out");
 
@@ -232,15 +234,24 @@ logOut: async () => {
     if(!authUser || get().socket?.connected) return;
 
     const socket=io(BASE_URL,{
+       transports: ["websocket"],
       autoConnect: false,      
       auth: { userId: authUser._id }
     })
    
 
-    socket.on("getOnlineUsers",(userIds)=>{
-        set({onlineUsers:userIds})
-        console.log(userIds)
-    })
+  socket.on("getOnlineUsers", (userIds) => {
+  set((state) => {
+    if (
+      state.onlineUsers.length === userIds.length &&
+      state.onlineUsers.every(id => userIds.includes(id))
+    ) {
+      return state;
+    }
+    return { onlineUsers: userIds };
+  });
+});
+
 
 
 socket.off("friendRequest:new");

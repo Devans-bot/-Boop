@@ -30,8 +30,8 @@ if (!userSocketMap[userId]) {
     userSocketMap[userId].add(socket.id);
 
 
-io.emit("getOnlineUsers", Object.keys(userSocketMap));
-
+socket.emit("getOnlineUsers", Object.keys(userSocketMap));
+socket.broadcast.emit("getOnlineUsers", Object.keys(userSocketMap)); 
 socket.on("disconnect", () => {
     console.log("A user disconnected", socket.id);
   if (userSocketMap[userId]) {
@@ -40,10 +40,8 @@ socket.on("disconnect", () => {
         delete userSocketMap[userId];
       }
     }
-    io.emit("getOnlineUsers", Object.keys(userSocketMap));
-  });
-
-
+socket.emit("getOnlineUsers", Object.keys(userSocketMap));
+socket.broadcast.emit("getOnlineUsers", Object.keys(userSocketMap));  });
 });
 
 export const getReceiverSocketId = (receiverId) => {
