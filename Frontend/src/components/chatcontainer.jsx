@@ -8,6 +8,7 @@ import { getSharedAESKey } from '../utils/chatkey'
 import { getEmojiType, splitTextAndEmojis } from './emojis'
 import MonkeyLoader from './monkeyloader'
 import { formatTime } from './formattme'
+import { decryptWithAES } from '../utils/crypto'
 
 
 const Chatcontainer = () => {
