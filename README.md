@@ -1,284 +1,261 @@
-# 🐒 Boop — Secure Real-Time Chat Application
+# 🐒 Boop — Secure Real-Time Chat App (E2EE)
 
-Boop is a **production-grade, end-to-end encrypted (E2EE) real-time chat application** designed to mirror modern secure messaging platforms. It focuses on **security first**, **performance-aware engineering**, and **real-world multi-device support**.
+Boop is a **real-time, end-to-end encrypted (E2EE) chat application** built with **MERN + [Socket.IO](http://socket.io/)**, supporting **multi-device encryption**, **friend management**, **ephemeral messaging**, and **image sharing** — all with privacy as a first-class feature.
 
-This README explains:
-
-- What Boop does
-- Core features
-- System architecture & design decisions
-- Encryption & multi-device flow (code-level logic)
-- Backend–frontend coordination
-
----
-
-## ✨ Key Features
-
-- 🔐 True End-to-End Encryption (E2EE)
-- 📱 Multi-device login & synchronization
-- ⚡ Real-time messaging (Socket.IO)
-- 🟢 Online / offline presence
-- 🖼️ Encrypted image sharing
-- 🔑 Device-level key management
-- 🌍 Cross-browser support (desktop + mobile, incl. iOS Safari)
-- 🚀 Optimized crypto & UI performance
-
----
-
-## 🛠️ Tech Stack
-
-### Frontend
-
-- React
-- Zustand (state management)
-- Socket.IO Client
-- Web Crypto API
-- Tailwind CSS
-
-### Backend
-
-- Node.js
-- Express
-- MongoDB + Mongoose
-- Socket.IO
-- Redis (presence & socket scaling)
-- Cloudinary (media storage)
-
----
-
-## 🧠 High-Level Architecture
-
-```
-Client (React)
-   │  HTTPS / WebSocket
-   ▼
-API Gateway / Load Balancer
-   │
-┌───────────────┬──────────────────┬─────────────────┐
-│ Auth Service  │ Chat Service     │ Presence Service│
-│               │                  │                 │
-│ MongoDB       │ MongoDB          │ Redis           │
-└───────────────┴──────────────────┴─────────────────┘
-           │
-      Media Service (Cloudinary)
-
-```
-
-### Design Principles
-
-- Client-side encryption only
-- Server is message-blind (zero-knowledge for content)
-- Stateless backend services
-- Horizontal scalability
-- Optimistic UI + real-time sync
-
----
-
-## 🔐 Encryption & Security Model
-
-Boop uses a **hybrid encryption model** inspired by modern messengers.
-
-### 🔑 Cryptography Used
-
-- **RSA-OAEP (2048-bit)**
-    - Device identity keys
-    - Secure AES key distribution
-- **AES-GCM (256-bit)**
-    - Message encryption
-    - Image encryption metadata
-
----
-
-## 📱 Device-Based Security Model
-
-- Every **device generates its own RSA key pair**
-- Private keys never leave the device (stored in IndexedDB / local storage)
-- Public keys are registered with the backend
-- Devices can be independently:
-    - Added
-    - Revoked
-    - Managed
-
-Compromising one device **does not compromise the account**.
-
----
-
-## 🔐 Chat Key (AES) Design
-
-- Each chat has **one shared AES key**
-- AES key is:
-    - Generated once per chat
-    - Never stored in plaintext
-    - Encrypted separately for each authorized device
-
-### ChatKey Schema (Conceptual)
-
-```jsx
-ChatKey {
-  chatId,
-  userA,
-  userB,
-  encryptedKeysByDevice: Map<deviceId, encryptedAES>,
-  encryptedKeyForServer
-}
-
-```
-
----
-
-## 🔄 Multi-Device E2EE Flow (End-to-End)
-
-### 1️⃣ Device Registration
-
-- Device generates RSA key pair
-- Public key sent to backend
-- Private key stored locally
-
-### 2️⃣ Chat Creation
-
-- Client generates random AES key
-- AES key encrypted:
-    - For each device (RSA public key)
-    - Once for server (performance tradeoff)
-
-### 3️⃣ Fetching Chat AES Key
-
-- Client requests `/chat/key/:chatId`
-- If encrypted key exists for device → returned
-- If device is new:
-    - Server decrypts AES (server key)
-    - Re-encrypts AES for new device
-    - Stores mapping for future use
-
-### 4️⃣ Client Decrypts & Caches AES
-
-- RSA decrypt → raw AES
-- Imported as AES-GCM key
-- Cached in memory (Map)
-
----
-
-## 💬 Message Sending Flow (Code-Level)
-
-1. User clicks **Send**
-2. Client resolves `chatId`
-3. Client calls `getSharedAESKey(chatId)`
-4. AES key returned from cache or backend
-5. Message encrypted with AES-GCM
-6. Ciphertext sent to backend
-7. Backend stores encrypted message
-8. Socket.IO emits message to recipients
-
-**Server never decrypts messages.**
-
----
-
-## 📥 Message Receiving Flow
-
-1. Client receives encrypted message
-2. Retrieves AES key from cache
-3. Decrypts message locally
-4. Renders plaintext in UI
-
----
-
-## ⚡ Real-Time System (Socket.IO)
-
-### Real-Time Events
-
-- Message delivery
-- Online / offline presence
-- Friend requests
-- Cross-device sync
-
-### Optimizations
-
-- WebSocket-first transport
-- Targeted socket emits
-- Redis adapter for horizontal scaling
-- Debounced presence updates
-
----
-
-## 🚀 Performance Optimizations
-
-### Crypto
-
-- AES key caching (RSA used only once per chat)
-- Minimal encryption operations on mobile
-
-### UI
-
-- Optimistic message rendering
-- Minimal re-renders via Zustand
-- No unnecessary API refetches
-
----
-
-## 🗃️ Database Design Overview
-
-### MongoDB Collections
-
-- Users
-- Devices
-- Chats
-- Messages
-- ChatKeys
-
-### Indexing Strategy
-
-- `chatId + createdAt` (messages)
-- `participants` (chats)
-
----
-
-## ⚖️ Tradeoffs & Design Decisions
-
-### ✅ Pros
-
-- Fast multi-device sync
-- Strong encryption guarantees
-- Excellent mobile performance
-- Simple mental model
-
-### ❌ Cons
-
-- No forward secrecy (yet)
-- Server-assisted key distribution
-
-These were **intentional tradeoffs** prioritizing correctness and performance.
-
----
-
-## 🧪 Tested Scenarios
-
-- Cross-browser messaging
-- iOS Safari ↔ Chrome
-- Multi-device login/logout
-- Real-time encryption/decryption
-- Network latency handling
-- Refresh persistence
-
----
-
-## 🚀 Future Enhancements
-
-- Forward secrecy (per-message keys)
-- Key rotation
-- Device management UI
-- Read receipts
-- Typing indicators
-- User-controlled device revocation
-
----
-
-## 🐵 Final Note
-
-Boop was built using **real production engineering principles**:
-
-> Correctness → Performance → Polish
+> 🔐 Messages are encrypted on the client.
+> 
+> 
+> 🚫 The server can never read message content.
 > 
 
-It is not just a chat app — it is a **secure communication system**.
+---
 
-Happy Booping 🐒💬
+## 🚀 Features
+
+### 🔐 Security & Privacy
+
+- End-to-End Encryption (AES-256-GCM)
+- RSA-OAEP public/private keys per **device**
+- Multi-device secure key distribution
+- Device revocation support
+- Encrypted key recovery (server cannot decrypt messages)
+- Ephemeral messages (auto-delete after 24h)
+
+### 💬 Messaging
+
+- 1-to-1 real-time chat ([Socket.IO](http://socket.io/))
+- Encrypted text messages
+- Image sharing (Cloudinary)
+- Message delivery in real time
+- Online / offline presence
+
+### 👥 Social
+
+- Friend system
+- Friend requests (real-time)
+- User search
+- User profiles
+
+### ⚙️ App Experience
+
+- Responsive UI (mobile + desktop)
+- Emoji support
+- Image preview & download
+- Theme switching (DaisyUI themes)
+- Persistent login with JWT cookies
+
+---
+
+## 🧠 System Architecture
+
+### High-Level Architecture
+
+Client (React)
+├─ Zustand State
+├─ Web Crypto API
+├─ [Socket.IO](http://socket.io/) Client
+└─ Encrypted Messages
+↓
+Server (Node.js + Express)
+├─ REST APIs
+├─ [Socket.IO](http://socket.io/)
+├─ JWT Auth (Cookies)
+└─ Encrypted Storage
+↓
+MongoDB + Cloudinary
+
+---
+
+## 🔐 Encryption Design (E2EE)
+
+### Key Strategy
+
+- **AES-256 key per chat**
+- **RSA key pair per device**
+- AES key is encrypted:
+    - Once per device (RSA)
+    - Once for server recovery (AES-GCM with server secret)
+
+### Flow
+
+1. Client generates RSA key pair per device
+2. AES key generated when chat starts
+3. AES key encrypted for:
+    - Each active device
+    - Server (for re-encryption only)
+4. Messages encrypted client-side using AES
+5. Server stores only encrypted payloads
+
+✅ Server cannot decrypt messages
+
+✅ New devices can securely join chats
+
+✅ Revoked devices lose access
+
+---
+
+## 🌐 API Design
+
+### Auth
+
+| Method | Endpoint | Description |
+| --- | --- | --- |
+| POST | `/api/user/signup` | Register |
+| POST | `/api/user/login` | Login |
+| POST | `/api/user/logout` | Logout |
+| GET | `/api/user/checkauth` | Verify auth |
+
+### Users & Friends
+
+| Method | Endpoint | Purpose |
+| --- | --- | --- |
+| GET | `/api/user/allfrnds` | Friend list |
+| POST | `/api/user/searchuser` | Search users |
+| GET | `/api/user/sendrequest/:id` | Send request |
+| GET | `/api/user/requests` | Pending requests |
+| GET | `/api/user/addfriend/:id` | Add/remove friend |
+| GET | `/api/user/userprofile/:id` | Public profile |
+
+### Chat & Messages
+
+| Method | Endpoint | Purpose |
+| --- | --- | --- |
+| GET | `/api/chat/:chatId` | Fetch messages |
+| POST | `/api/chat/send/:chatId` | Send message |
+| GET | `/api/chat/users` | Sidebar users |
+
+### Encryption Keys
+
+| Method | Endpoint | Purpose |
+| --- | --- | --- |
+| POST | `/api/device/registerdevice` | Register device |
+| POST | `/api/device/revokedevice` | Revoke device |
+| GET | `/api/chat/key/:chatId` | Fetch AES key |
+| POST | `/api/chat/key` | Create AES key |
+
+---
+
+## 🗄️ Database Schema
+
+### User
+
+```jsx
+User {
+  email (unique)
+  username (unique)
+  password (hashed)
+  profilePic
+  friends: [UserId]
+  friendRequests: [UserId]
+  timestamps
+}
+Message
+Message {
+  chatId
+  senderId
+  receiverId
+  cipherText
+  iv
+  image
+  createdAt (TTL: 24h)
+}
+ChatKey
+ChatKey {
+  chatId
+  userA
+  userB
+  encryptedKeysByDevice: {
+    deviceId → RSA(AES_KEY)
+  }
+  encryptedKeyForServer
+}
+Device
+Device {
+  userId
+  deviceId
+  publicKey
+  revoked
+  lastSeen
+}
+⚡ Real-Time (Socket.IO)
+Events
+receiveMessage
+
+friendRequest:new
+
+friend:update
+
+getOnlineUsers
+
+Presence Tracking
+Multiple sockets per user
+
+Real-time online/offline status
+
+Auto cleanup on disconnect
+
+```
+
+📈 Scaling Strategy
+Stateless REST APIs
+
+MongoDB indexes on chatId & createdAt
+
+TTL index auto-cleans messages
+
+Horizontal scaling with Socket.IO + Redis adapter
+
+Cloudinary CDN for images
+
+🚧 Bottlenecks & Improvements
+Current Limitations
+No message pagination
+
+Socket auth trusts client userId
+
+Base64 image upload overhead
+
+Planned Improvements
+Cursor-based pagination
+
+JWT verification in socket middleware
+
+Signed image upload URLs
+
+Redis caching for presence & rate limiting
+
+⚖️ Tradeoffs
+Decision	Tradeoff
+End-to-End Encryption	No server-side search
+Ephemeral messages	No chat history
+Cookie-based JWT	Needs CSRF protection
+Multi-device encryption	Higher complexity
+🛠 Tech Stack
+Frontend
+React
+
+Zustand
+
+Socket.IO Client
+
+Web Crypto API
+
+TailwindCSS + DaisyUI
+
+Backend
+Node.js
+
+Express
+
+MongoDB (Mongoose)
+
+Socket.IO
+
+JWT (HTTP-only cookies)
+
+Infra
+Cloudinary (images)
+
+MongoDB Atlas
+
+Vite
